@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
+const { expressjwt: requireAuth } = require('express-jwt');
 
 const app = express();
 app.use(cors());
@@ -24,7 +24,7 @@ app.post('/admin/login', (req, res) => {
   res.status(401).json({ error: 'Invalid credentials' });
 });
 
-const requireAuth = expressJwt({ secret: JWT_SECRET, algorithms: ['HS256'] });
+const requireAuthMiddleware = requireAuth({ secret: JWT_SECRET, algorithms: ['HS256'] });
 
 app.get('/registrations', requireAuth, (req, res) => {
   res.json(registrations);
