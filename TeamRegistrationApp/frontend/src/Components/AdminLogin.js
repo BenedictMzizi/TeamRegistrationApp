@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { adminLogin, setToken } from '../api';
+import { adminLogin } from '../api';
+import { supabase } from '../supabaseClient';
 
 export default function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -9,21 +10,26 @@ export default function AdminLogin({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await adminLogin(email, password);
-      setToken(res.data.token);
-      onLogin(res.data.user);
-    } catch {
-      setError('Invalid login');
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      onLogin(data.user);
+    } catch (err) {
+      setError('Login failed: ' + err.message);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4">
       <h2 className="text-lg font-semibold mb-2">Admin Login</h2>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mb-2 border p-2" placeholder="Email" />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mb-2 border p-2" placeholder="Password" />
-      {error && <p className="text-red-500 mb-2">{error}</p>}
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-full mb-2 border p-2" />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required className="w-full mb-2 border p-2" />
       <button className="bg-blue-600 text-white py-2 px-4 rounded">Login</button>
+      {error && <p className="text-red-600 mt-2">{error}</p>}
     </form>
   );
 }
