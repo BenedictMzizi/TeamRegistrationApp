@@ -5,16 +5,16 @@ function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    async function fetchUsers() {
-      const { data, error } = await supabase.from('users').select('*');
-      if (error) {
-        console.error('Error fetching users:', error);
-      } else {
-        setUsers(data);
-      }
+  const fetchUsers = async () => {
+    const { data, error } = await supabase.from('users').select('*');
+    if (error) {
+      console.error('Error fetching users:', error.message);
+    } else {
+      setUsers(data);
     }
-    fetchUsers();
-  }, []);
+  };
+  fetchUsers();
+}, []);
 
   return (
     <div style={{ padding: 20 }}>
