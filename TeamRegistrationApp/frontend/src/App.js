@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import RegisterForm from './Components/RegistrationForm';
 import AdminLogin from './Components/AdminLogin';
@@ -17,7 +16,6 @@ function App() {
 
     getSession();
 
-    // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setAdmin(session.user);
