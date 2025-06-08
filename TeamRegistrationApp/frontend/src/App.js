@@ -8,15 +8,18 @@ function App() {
   const [admin, setAdmin] = useState(null);
 
   useEffect(() => {
-    // Check for active session on load
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) setAdmin(session.user);
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Error fetching session:', error.message);
+      } else if (data?.session?.user) {
+        setAdmin(data.session.user);
+      }
     };
 
     getSession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setAdmin(session.user);
       } else {
@@ -25,13 +28,17 @@ function App() {
     });
 
     return () => {
-      listener.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setAdmin(null);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Logout error:', error.message);
+    } else {
+      setAdmin(null);
+    }
   };
 
   return (
@@ -49,7 +56,12 @@ function App() {
         <>
           <div className="text-center mb-4">
             <p className="text-gray-700">Logged in as: {admin.email}</p>
-            <button onClick={handleLogout} className="mt-2 px-4 py-2 bg-gray-700 text-white rounded">Logout</button>
+            <button
+              onClick={handleLogout}
+              className="mt-2 px-4 py-2 bg-gray-700 text-white rounded"
+            >
+              Logout
+            </button>
           </div>
           <AdminDashboard />
         </>
