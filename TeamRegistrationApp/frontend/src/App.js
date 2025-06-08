@@ -1,14 +1,34 @@
-import React from 'react';
-import RegistrationForm from './RegistrationForm';
-import AdminPanel from './AdminPanel';
+import React, { useEffect, useState } from 'react';
+import { supabase } from './supabaseClient';
 
 function App() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function fetchUsers() {
+      const { data, error } = await supabase.from('users').select('*');
+      if (error) {
+        console.error('Error fetching users:', error);
+      } else {
+        setUsers(data);
+      }
+    }
+    fetchUsers();
+  }, []);
+
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+    <div style={{ padding: 20 }}>
       <h1>Team Registration App</h1>
-      <RegistrationForm />
-      <hr />
-      <AdminPanel />
+      <h2>Users List</h2>
+      {users.length === 0 ? (
+        <p>No users found</p>
+      ) : (
+        <ul>
+          {users.map(user => (
+            <li key={user.id}>{user.name} - {user.email}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
