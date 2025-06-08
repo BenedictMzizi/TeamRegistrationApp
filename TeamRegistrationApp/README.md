@@ -8,3 +8,5 @@ This is a full-stack app where users can register to join a team, and an admin c
 - Database: In-memory (can upgrade to Supabase or MongoDB)
 - Deployment: Vercel (frontend) + Render (backend)
 - CI/CD: GitHub Actions
+
+- live demo - https://team-registration-app.vercel.app
