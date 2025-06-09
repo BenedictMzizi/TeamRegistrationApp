@@ -8,7 +8,6 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setAdmin(session.user);
@@ -26,11 +25,12 @@ function App() {
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
 
-  return admin ? (
-    <AdminDashboard />
-  ) : (
-    <AdminLogin onLogin={setAdmin} />
-  );
+ return admin ? (
+  <AdminDashboard onLogout={() => setAdmin(null)} />
+) : 
+   (
+  <AdminLogin onLogin={setAdmin} />
+);
 }
 
 export default App;
