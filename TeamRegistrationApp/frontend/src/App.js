@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
-  const [users, setUsers] = useState([]);
+  const [admin, setAdmin] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchUsers = async () => {
-    const { data, error } = await supabase.from('users').select('*');
-    if (error) {
-      console.error('Error fetching users:', error.message);
-    } else {
-      setUsers(data);
-    }
-  };
-  fetchUsers();
-}, []);
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setAdmin(session.user);
+      }
+      setLoading(false);
+    });
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>Team Registration App</h1>
-      <h2>Users List</h2>
-      {users.length === 0 ? (
-        <p>No users found</p>
-      ) : (
-        <ul>
-          {users.map(user => (
-            <li key={user.id}>{user.name} - {user.email}</li>
-          ))}
-        </ul>
-      )}
-    </div>
+    
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAdmin(session?.user || null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  if (loading) return <p className="text-center mt-4">Loading...</p>;
+
+  return admin ? (
+    <AdminDashboard />
+  ) : (
+    <AdminLogin onLogin={setAdmin} />
   );
 }
 
