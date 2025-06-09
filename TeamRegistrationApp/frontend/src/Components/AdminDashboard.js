@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { fetchRegistrations, updateRegistrationStatus } from '../api';
 import { supabase } from '../supabaseClient';
