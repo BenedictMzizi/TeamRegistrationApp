@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRegistrations, updateRegistrationStatus } from '../api';
+import { supabase } from '../supabaseClient';
+
+<button
+  onClick={async () => {
+    await supabase.auth.signOut();
+    window.location.reload(); // or setAdmin(null) if passed via props
+  }}
+  className="bg-gray-600 text-white px-4 py-2 rounded mt-4"
+>
+  Logout
+</button>
 
 export default function AdminDashboard() {
   const [registrations, setRegistrations] = useState([]);
