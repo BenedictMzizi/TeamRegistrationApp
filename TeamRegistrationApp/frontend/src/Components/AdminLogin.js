@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { adminLogin } from '../api';
 import { supabase } from '../supabaseClient';
 
 export default function AdminLogin({ onLogin }) {
@@ -14,9 +13,7 @@ export default function AdminLogin({ onLogin }) {
         email,
         password,
       });
-
       if (error) throw error;
-
       onLogin(data.user);
     } catch (err) {
       setError('Login failed: ' + err.message);
@@ -24,7 +21,7 @@ export default function AdminLogin({ onLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4">
+    <form onSubmit={handleSubmit} className="mb-4">
       <h2 className="text-lg font-semibold mb-2">Admin Login</h2>
       <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-full mb-2 border p-2" />
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required className="w-full mb-2 border p-2" />
