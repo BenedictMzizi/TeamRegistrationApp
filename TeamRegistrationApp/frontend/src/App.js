@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
+import RegistrationForm from './components/RegistrationForm';
 
 function App() {
   const [admin, setAdmin] = useState(null);
@@ -15,7 +16,6 @@ function App() {
       setLoading(false);
     });
 
-    
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setAdmin(session?.user || null);
     });
@@ -25,12 +25,17 @@ function App() {
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
 
- return admin ? (
-  <AdminDashboard onLogout={() => setAdmin(null)} />
-) : 
-   (
-  <AdminLogin onLogin={setAdmin} />
-);
+  return admin ? (
+    <AdminDashboard onLogout={() => setAdmin(null)} />
+  ) : (
+    <div className="p-4 max-w-xl mx-auto">
+      <AdminLogin onLogin={setAdmin} />
+      <hr className="my-6" />
+      <RegistrationForm />
+    </div>
+  );
 }
 
 export default App;
+
+}
