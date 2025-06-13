@@ -1,4 +1,4 @@
-import { supabase } from './TeamRegistrationApp/frontend/src/supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 export const registerUser = async (name) => {
   const { data, error } = await supabase
