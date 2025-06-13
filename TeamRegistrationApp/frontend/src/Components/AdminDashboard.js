@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { fetchRegistrations, updateRegistrationStatus } from '../api';
-import { supabase } from '.TeamRegistrationApp/frontend/src/supabaseClient.jst';
+import { fetchRegistrations, updateRegistrationStatus } from '.TeamRegistrationApp/frontend/src/api.js';
+import { supabase } from '.TeamRegistrationApp/frontend/src/supabaseClient.js';
 
 export default function AdminDashboard({ onLogout }) {
   const [registrations, setRegistrations] = useState([]);
