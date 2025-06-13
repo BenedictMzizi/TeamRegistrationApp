@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/supabaseClient';
-import AdminLogin from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/AdminLogin';
+import AdminLogin from '.TeamRegistrationApp/frontend/src/Components/AdminLogin.js';
 import AdminDashboard from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/AdminDashboard';
 import RegistrationForm from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/RegistrationForm';
 
