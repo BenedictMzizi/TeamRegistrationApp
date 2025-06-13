@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from './TeamRegistrationApp/frontend/src/supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 export default function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState('');
