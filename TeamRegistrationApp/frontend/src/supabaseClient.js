@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { supabase } from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/supabaseClient';
+//import { supabase } from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/supabaseClient';
 
 
 const supabaseUrl = 'https://avkvqrtxwqyugzoekoru.supabase.co';
