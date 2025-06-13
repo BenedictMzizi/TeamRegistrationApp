@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './TeamRegistrationApp/frontend/src/api.js';
+import App from './api.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
