@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from './supabaseClient';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
-import RegistrationForm from './components/RegistrationForm';
+import { supabase } from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/supabaseClient';
+import AdminLogin from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/AdminLogin';
+import AdminDashboard from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/AdminDashboard';
+import RegistrationForm from '.TeamRegistrationApp/TeamRegistrationApp/frontend/src/components/RegistrationForm';
 
 function App() {
   const [admin, setAdmin] = useState(null);
