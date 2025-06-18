@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRegistrations, updateRegistrationStatus } from './api.js';
 import supabase from './supabaseClient.js';
+import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
+
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+  navigate('/');
+};
 
 export default function AdminDashboard({ onLogout }) {
   const [registrations, setRegistrations] = useState([]);
