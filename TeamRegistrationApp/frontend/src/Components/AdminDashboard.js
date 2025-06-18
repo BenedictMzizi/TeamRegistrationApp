@@ -1,37 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
-export default function AdminDashboard({ onLogout }) {
+export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const fetchUsers = async () => {
     const { data, error } = await supabase.from('users').select('*');
     if (!error) setUsers(data);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    onLogout();
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const updateStatus = async (id, status) => {
+    await supabase.from('users').update({ status }).eq('id', id);
+    fetchUsers();
   };
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Team Registration App</h1>
-      <button onClick={handleLogout} className="mb-4 bg-red-600 text-white px-4 py-2 rounded">
-        Logout
-      </button>
-      <h2 className="text-xl font-semibold">Users List</h2>
-      <ul className="list-disc pl-5">
-        {users.map((user) => (
-          <li key={user.id}>
-            {user.name} - {user.email}
-          </li>
-        ))}
-      </ul>
+      <h2 className="text-xl font-bold mb-4">Admin Dashboard</h2>
+      {users.map((user) => (
+        <div key={user.id} className="border p-3 mb-2 rounded">
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Status:</strong> {user.status}</p>
+          <button className="bg-green-500 text-white px-2 py-1 mr-2" onClick={() => updateStatus(user.id, 'approved')}>Approve</button>
+          <button className="bg-red-500 text-white px-2 py-1" onClick={() => updateStatus(user.id, 'rejected')}>Reject</button>
+        </div>
+      ))}
     </div>
   );
 }
