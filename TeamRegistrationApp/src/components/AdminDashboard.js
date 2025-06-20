@@ -9,78 +9,68 @@ export default function AdminDashboard({ onLogout }) {
   }, []);
 
   const fetchRegistrations = async () => {
-    const { data, error } = await supabase.from('registrations').select('*');
-    if (error) {
-      console.error('Error fetching registrations:', error);
-    } else {
+    const { data, error } = await supabase
+      .from('registrations')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) {
       setRegistrations(data);
     }
   };
 
-  const updateStatus = async (id, newStatus) => {
-    const { error } = await supabase
-      .from('registrations')
-      .update({ status: newStatus })
-      .eq('id', id);
+  const handleApprove = async (reg) => {
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert([{ name: reg.name, email: reg.email }]);
 
-    if (!error) {
-      setRegistrations((prev) =>
-        prev.map((reg) => (reg.id === id ? { ...reg, status: newStatus } : reg))
-      );
+    if (!insertError) {
+      await supabase.from('registrations').delete().eq('id', reg.id);
+      fetchRegistrations();
+    } else {
+      alert('Failed to approve: ' + insertError.message);
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    onLogout();
+  const handleReject = async (id) => {
+    const { error } = await supabase.from('registrations').delete().eq('id', id);
+    if (!error) {
+      fetchRegistrations();
+    } else {
+      alert('Failed to reject: ' + error.message);
+    }
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Admin Dashboard</h2>
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-2 rounded mb-4"
-      >
-        Logout
-      </button>
+    <div className="p-4 max-w-xl mx-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Admin Dashboard</h2>
+        <button onClick={onLogout} className="bg-red-600 text-white px-4 py-1 rounded">Logout</button>
+      </div>
 
       {registrations.length === 0 ? (
-        <p>No registrations found.</p>
+        <p>No pending registrations.</p>
       ) : (
-        <table className="w-full border">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Email</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {registrations.map((reg) => (
-              <tr key={reg.id}>
-                <td className="border p-2">{reg.name}</td>
-                <td className="border p-2">{reg.email}</td>
-                <td className="border p-2">{reg.status}</td>
-                <td className="border p-2">
-                  <button
-                    className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => updateStatus(reg.id, 'approved')}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="bg-yellow-500 text-white px-2 py-1 rounded"
-                    onClick={() => updateStatus(reg.id, 'rejected')}
-                  >
-                    Reject
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul>
+          {registrations.map((reg) => (
+            <li key={reg.id} className="border p-2 mb-2">
+              <p><strong>{reg.name}</strong> — {reg.email}</p>
+              <div className="mt-2 space-x-2">
+                <button
+                  onClick={() => handleApprove(reg)}
+                  className="bg-green-600 text-white px-3 py-1 rounded"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleReject(reg.id)}
+                  className="bg-gray-600 text-white px-3 py-1 rounded"
+                >
+                  Reject
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
