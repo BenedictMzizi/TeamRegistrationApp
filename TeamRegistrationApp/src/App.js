@@ -3,6 +3,7 @@ import { supabase } from './supabaseClient';
 import AdminLogin from './Components/AdminLogin';
 import AdminDashboard from './Components/AdminDashboard';
 import RegistrationForm from './Components/RegistrationForm';
+import PublicUsersList from './Components/PublicUsersList';
 
 function App() {
   const [admin, setAdmin] = useState(null);
@@ -32,6 +33,8 @@ function App() {
       <AdminLogin onLogin={setAdmin} />
       <hr className="my-6" />
       <RegistrationForm />
+      <hr className="my-6" />
+      <PublicUsersList />
     </div>
   );
 }
