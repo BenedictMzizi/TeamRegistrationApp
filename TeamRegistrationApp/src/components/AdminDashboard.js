@@ -1,10 +1,87 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
 
 export default function AdminDashboard({ onLogout }) {
+  const [registrations, setRegistrations] = useState([]);
+
+  useEffect(() => {
+    fetchRegistrations();
+  }, []);
+
+  const fetchRegistrations = async () => {
+    const { data, error } = await supabase.from('registrations').select('*');
+    if (error) {
+      console.error('Error fetching registrations:', error);
+    } else {
+      setRegistrations(data);
+    }
+  };
+
+  const updateStatus = async (id, newStatus) => {
+    const { error } = await supabase
+      .from('registrations')
+      .update({ status: newStatus })
+      .eq('id', id);
+
+    if (!error) {
+      setRegistrations((prev) =>
+        prev.map((reg) => (reg.id === id ? { ...reg, status: newStatus } : reg))
+      );
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    onLogout();
+  };
+
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
-      <button onClick={onLogout}>Logout</button>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Admin Dashboard</h2>
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white px-4 py-2 rounded mb-4"
+      >
+        Logout
+      </button>
+
+      {registrations.length === 0 ? (
+        <p>No registrations found.</p>
+      ) : (
+        <table className="w-full border">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2">Name</th>
+              <th className="border p-2">Email</th>
+              <th className="border p-2">Status</th>
+              <th className="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {registrations.map((reg) => (
+              <tr key={reg.id}>
+                <td className="border p-2">{reg.name}</td>
+                <td className="border p-2">{reg.email}</td>
+                <td className="border p-2">{reg.status}</td>
+                <td className="border p-2">
+                  <button
+                    className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                    onClick={() => updateStatus(reg.id, 'approved')}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="bg-yellow-500 text-white px-2 py-1 rounded"
+                    onClick={() => updateStatus(reg.id, 'rejected')}
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
