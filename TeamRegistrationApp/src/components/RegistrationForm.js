@@ -8,7 +8,7 @@ export default function RegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.from('users').insert([{ name, email, status: 'pending' }]);
+    const { error } = await supabase.from('registrations').insert([{ name, email, status: 'pending' }]);
     if (error) {
       setMessage('Submission failed.');
     } else {
