@@ -20,17 +20,19 @@ function App() {
       setAdmin(session?.user || null);
     });
 
-    return () => listener.subscription.unsubscribe();
+    return () => {
+      listener?.subscription?.unsubscribe();
+    };
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="text-center mt-4">Loading...</p>;
 
   return admin ? (
     <AdminDashboard onLogout={() => setAdmin(null)} />
   ) : (
-    <div style={{ maxWidth: '600px', margin: 'auto' }}>
+    <div className="p-4 max-w-xl mx-auto">
       <AdminLogin onLogin={setAdmin} />
-      <hr />
+      <hr className="my-6" />
       <RegistrationForm />
     </div>
   );
