@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
-import RegistrationForm from './components/RegistrationForm';
+import AdminLogin from './Components/AdminLogin';
+import AdminDashboard from './Components/AdminDashboard';
+import RegistrationForm from './Components/RegistrationForm';
 
 function App() {
   const [admin, setAdmin] = useState(null);
@@ -20,9 +20,7 @@ function App() {
       setAdmin(session?.user || null);
     });
 
-    return () => {
-      listener?.subscription?.unsubscribe();
-    };
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
