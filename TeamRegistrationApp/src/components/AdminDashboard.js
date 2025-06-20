@@ -87,6 +87,3 @@ export default function AdminDashboard({ onLogout }) {
     </div>
   );
 }
-
-
-pls pdate code
