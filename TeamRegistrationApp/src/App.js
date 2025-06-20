@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
-import AdminLogin from './Components/AdminLogin';
-import AdminDashboard from './Components/AdminDashboard';
-import RegistrationForm from './Components/RegistrationForm';
-import PublicUsersList from './Components/PublicUsersList';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import RegistrationForm from './components/RegistrationForm';
 
 function App() {
   const [admin, setAdmin] = useState(null);
@@ -24,17 +23,15 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  if (loading) return <p className="text-center mt-4">Loading...</p>;
+  if (loading) return <p>Loading...</p>;
 
   return admin ? (
     <AdminDashboard onLogout={() => setAdmin(null)} />
   ) : (
-    <div className="p-4 max-w-xl mx-auto">
+    <div style={{ maxWidth: '600px', margin: 'auto' }}>
       <AdminLogin onLogin={setAdmin} />
-      <hr className="my-6" />
+      <hr />
       <RegistrationForm />
-      <hr className="my-6" />
-      <PublicUsersList />
     </div>
   );
 }
