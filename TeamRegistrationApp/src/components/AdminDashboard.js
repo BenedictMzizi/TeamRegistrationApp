@@ -9,13 +9,22 @@ export default function AdminDashboard({ onLogout }) {
   }, []);
 
   const fetchRegistrations = async () => {
-    const { data, error } = await supabase
+    const { data: regData } = await supabase
       .from('registrations')
       .select('*')
       .order('created_at', { ascending: false });
-    if (!error) {
-      setRegistrations(data);
-    }
+
+    const { data: userData } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const combined = [
+      ...(regData || []).map((r) => ({ ...r, source: 'registrations' })),
+      ...(userData || []).map((u) => ({ ...u, source: 'users' }))
+    ];
+
+    setRegistrations(combined);
   };
 
   const handleApprove = async (reg) => {
@@ -53,26 +62,28 @@ export default function AdminDashboard({ onLogout }) {
       </div>
 
       {registrations.length === 0 ? (
-        <p>No pending registrations.</p>
+        <p>No registrations or users found.</p>
       ) : (
         <ul>
           {registrations.map((reg) => (
             <li key={reg.id} className="border p-2 mb-2">
               <p><strong>{reg.name}</strong> — {reg.email}</p>
-              <div className="mt-2 space-x-2">
-                <button
-                  onClick={() => handleApprove(reg)}
-                  className="bg-green-600 text-white px-3 py-1 rounded"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => handleReject(reg.id)}
-                  className="bg-gray-600 text-white px-3 py-1 rounded"
-                >
-                  Reject
-                </button>
-              </div>
+              {reg.source === 'registrations' && (
+                <div className="mt-2 space-x-2">
+                  <button
+                    onClick={() => handleApprove(reg)}
+                    className="bg-green-600 text-white px-3 py-1 rounded"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleReject(reg.id)}
+                    className="bg-gray-600 text-white px-3 py-1 rounded"
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
