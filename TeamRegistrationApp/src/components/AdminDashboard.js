@@ -46,7 +46,7 @@ export default function AdminDashboard({ onLogout }) {
       >
         Logout
       </button>
-<pre>{JSON.stringify(registrations, null, 2)}</pre>
+
       {registrations.length === 0 ? (
         <p>No registrations found.</p>
       ) : (
