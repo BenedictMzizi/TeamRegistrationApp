@@ -7,7 +7,6 @@ export default function RegistrationForm() {
   const [message, setMessage] = useState('');
   const [registrations, setRegistrations] = useState([]);
 
-  // Fetch registrations on load
   useEffect(() => {
     fetchRegistrations();
   }, []);
@@ -15,8 +14,7 @@ export default function RegistrationForm() {
   const fetchRegistrations = async () => {
     const { data, error } = await supabase
       .from('registrations')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*'); // Removed .order('created_at')
 
     if (!error) {
       setRegistrations(data);
