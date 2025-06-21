@@ -6,21 +6,27 @@ export default function RegistrationForm() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [registrations, setRegistrations] = useState([]);
+  const [users, setUsers] = useState([]); // For approved users
 
   useEffect(() => {
     fetchRegistrations();
+    fetchUsers();
   }, []);
 
   const fetchRegistrations = async () => {
     const { data, error } = await supabase
       .from('registrations')
       .select('*');
+    if (!error) setRegistrations(data);
+    else console.error('Fetch error (registrations):', error.message);
+  };
 
-    if (!error) {
-      setRegistrations(data);
-    } else {
-      console.error('Fetch error:', error.message);
-    }
+  const fetchUsers = async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*');
+    if (!error) setUsers(data);
+    else console.error('Fetch error (users):', error.message);
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +34,6 @@ export default function RegistrationForm() {
     const { error } = await supabase
       .from('registrations')
       .insert([{ name, email, status: 'pending' }]);
-
     if (error) {
       setMessage('Submission failed.');
     } else {
@@ -66,13 +71,13 @@ export default function RegistrationForm() {
       </form>
 
       <h3 className="text-md font-semibold mt-4 mb-2">Current Members</h3>
-      {registrations.length === 0 ? (
-        <p>No users yet.</p>
+      {users.length === 0 ? (
+        <p>No approved members yet.</p>
       ) : (
         <ul className="list-disc pl-4">
-          {registrations.map((reg) => (
-            <li key={reg.id}>
-              <strong>{reg.name}</strong> — {reg.email} ({reg.status})
+          {users.map((user) => (
+            <li key={user.id}>
+              <strong>{user.name}</strong> — {user.email}
             </li>
           ))}
         </ul>
