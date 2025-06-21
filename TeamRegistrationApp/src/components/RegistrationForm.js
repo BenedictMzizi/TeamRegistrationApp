@@ -40,7 +40,7 @@ export default function RegistrationForm() {
       setMessage('Registration submitted!');
       setName('');
       setEmail('');
-      fetchRegistrations(); // Refresh the list
+      fetchRegistrations();
     }
   };
 
