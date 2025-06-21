@@ -14,7 +14,7 @@ export default function RegistrationForm() {
   const fetchRegistrations = async () => {
     const { data, error } = await supabase
       .from('registrations')
-      .select('*'); // Removed .order('created_at')
+      .select('*');
 
     if (!error) {
       setRegistrations(data);
@@ -65,7 +65,7 @@ export default function RegistrationForm() {
         {message && <p className="mt-2 text-blue-600">{message}</p>}
       </form>
 
-      <h3 className="text-md font-semibold mt-4 mb-2">Current Registrations</h3>
+      <h3 className="text-md font-semibold mt-4 mb-2">Current Members</h3>
       {registrations.length === 0 ? (
         <p>No users yet.</p>
       ) : (
