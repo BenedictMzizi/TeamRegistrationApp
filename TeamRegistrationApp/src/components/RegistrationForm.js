@@ -6,7 +6,7 @@ export default function RegistrationForm() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [registrations, setRegistrations] = useState([]);
-  const [users, setUsers] = useState([]); // For approved users
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     fetchRegistrations();
