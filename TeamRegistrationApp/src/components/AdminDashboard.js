@@ -18,17 +18,24 @@ export default function AdminDashboard({ onLogout }) {
   };
 
   const updateStatus = async (id, newStatus) => {
-    const { error } = await supabase
-      .from('registrations')
-      .update({ status: newStatus })
-      .eq('id', id);
+    const reg = registrations.find((r) => r.id === id);
 
+    if (newStatus === 'approved') {
+      const { error: insertError } = await supabase
+        .from('users')
+        .insert([{ name: reg.name, email: reg.email }]);
+
+      if (insertError) {
+        console.error('Error inserting into users:', insertError.message);
+        return;
+      }
+    }
+
+    const { error } = await supabase.from('registrations').delete().eq('id', id);
     if (!error) {
-      setRegistrations((prev) =>
-        prev.map((reg) =>
-          reg.id === id ? { ...reg, status: newStatus } : reg
-        )
-      );
+      setRegistrations((prev) => prev.filter((r) => r.id !== id));
+    } else {
+      console.error('Error updating status:', error.message);
     }
   };
 
