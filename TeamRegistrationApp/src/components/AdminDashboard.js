@@ -17,8 +17,11 @@ export default function AdminDashboard({ onLogout }) {
     }
   };
 
-  const updateStatus = async (id, newStatus) => {
-    const reg = registrations.find((r) => r.id === id);
+  const updateStatus = async (reg, newStatus) => {
+    if (!reg || !reg.id) {
+      console.error('Invalid registration data.');
+      return;
+    }
 
     if (newStatus === 'approved') {
       const { error: insertError } = await supabase
@@ -31,9 +34,9 @@ export default function AdminDashboard({ onLogout }) {
       }
     }
 
-    const { error } = await supabase.from('registrations').delete().eq('id', id);
+    const { error } = await supabase.from('registrations').delete().eq('id', reg.id);
     if (!error) {
-      setRegistrations((prev) => prev.filter((r) => r.id !== id));
+      setRegistrations((prev) => prev.filter((r) => r.id !== reg.id));
     } else {
       console.error('Error updating status:', error.message);
     }
@@ -75,13 +78,13 @@ export default function AdminDashboard({ onLogout }) {
                 <td className="border px-4 py-2">
                   <button
                     className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => updateStatus(reg.id, 'approved')}
+                    onClick={() => updateStatus(reg, 'approved')}
                   >
                     Approve
                   </button>
                   <button
                     className="bg-yellow-500 text-white px-2 py-1 rounded"
-                    onClick={() => updateStatus(reg.id, 'rejected')}
+                    onClick={() => updateStatus(reg, 'rejected')}
                   >
                     Reject
                   </button>
