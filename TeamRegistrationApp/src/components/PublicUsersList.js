@@ -9,22 +9,28 @@ export default function PublicUsersList() {
   }, []);
 
   const fetchUsers = async () => {
-    const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('users').select('*');
     if (!error) {
       setUsers(data);
+    } else {
+      console.error('Error fetching users:', error.message);
     }
   };
 
   return (
     <div className="mt-6">
       <h2 className="text-lg font-semibold mb-2">Approved Members</h2>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id} className="border p-2 mb-2">
-            <p><strong>{user.name}</strong> — {user.email}</p>
-          </li>
-        ))}
-      </ul>
+      {users.length === 0 ? (
+        <p>No users yet.</p>
+      ) : (
+        <ul>
+          {users.map((user) => (
+            <li key={user.id} className="border p-2 mb-2">
+              <p><strong>{user.name}</strong> — {user.email}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
