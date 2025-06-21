@@ -23,12 +23,12 @@ export default function RegistrationForm() {
       .from('registrations')
       .insert([{ name, email, status: 'pending' }]);
     if (error) {
-      setMessage('❌ Submission failed.');
+      setMessage('Aww...Submission failed.');
     } else {
-      setMessage('✅ Registration submitted!');
+      setMessage(' Registration submitted!');
       setName('');
       setEmail('');
-      fetchUsers(); // Refresh members list after register
+      fetchUsers(); 
     }
   };
 
@@ -59,7 +59,7 @@ export default function RegistrationForm() {
       </form>
 
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-3">✅ Current Members</h3>
+        <h3 className="text-lg font-semibold mb-3">Current Members</h3>
         {users.length === 0 ? (
           <p className="text-gray-500">No approved members yet.</p>
         ) : (
