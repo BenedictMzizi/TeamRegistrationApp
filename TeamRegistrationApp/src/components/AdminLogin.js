@@ -57,7 +57,6 @@ export default function AdminLogin({ onLogin }) {
 
       <div style={{ fontSize: 13 }}>
         <h4>Demo Access</h4>
-        <p>Recruiters can test the approval workflow:</p>
 
         <div
           onClick={loadDemoAdmin}
@@ -70,9 +69,7 @@ export default function AdminLogin({ onLogin }) {
           Load Demo Admin Account
         </div>
 
-        <p style={{ marginTop: 8 }}>
-          Password: <strong>password</strong>
-        </p>
+
       </div>
     </form>
   );
