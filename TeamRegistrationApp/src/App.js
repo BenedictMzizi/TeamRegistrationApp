@@ -3,6 +3,7 @@ import { supabase } from './supabaseClient';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import RegistrationForm from './components/RegistrationForm';
+import Footer from "./components/Footer";
 
 function App() {
   const [admin, setAdmin] = useState(null);
@@ -16,23 +17,31 @@ function App() {
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAdmin(session?.user || null);
-    });
+    const { data: listener } =
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setAdmin(session?.user || null);
+      });
 
     return () => listener.subscription.unsubscribe();
   }, []);
 
   if (loading) return <p>Loading...</p>;
 
-  return admin ? (
-    <AdminDashboard onLogout={() => setAdmin(null)} />
-  ) : (
-    <div style={{ maxWidth: '600px', margin: 'auto' }}>
-      <AdminLogin onLogin={setAdmin} />
-      <hr />
-      <RegistrationForm />
-    </div>
+  return (
+    <>
+      {admin ? (
+        <AdminDashboard onLogout={() => setAdmin(null)} />
+      ) : (
+        <div style={{ maxWidth: '600px', margin: 'auto' }}>
+          <AdminLogin onLogin={setAdmin} />
+          <hr />
+          <RegistrationForm />
+        </div>
+      )}
+
+    
+      <Footer />
+    </>
   );
 }
 
